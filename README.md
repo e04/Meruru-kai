@@ -4,10 +4,13 @@ Meruruのフォークです。
 
 https://github.com/castaneai/Meruru
 
+
 - チャンネルリストからワンセグを除外するように変更
 - チャンネル切り替えをメニューバーからするように変更
 - URLスキームで開けるように変更。（EPGStation用）
   - EPGStation2.0以降で、設定からURLスキームに`meruru://ADDRESS`と入れれば、ブラウザから開けます。
+  
+- 表示がおかしいバグなどを修正
 
 ## Config
 
