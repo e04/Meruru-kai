@@ -173,13 +173,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSComboBoxDelegate, VLCMedia
         let previousFrame = self.window.frame
         let frame = NSRect(x: previousFrame.minX, y: previousFrame.minY, width: previousFrame.width + 0.1, height: previousFrame.height)
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             self.window.setFrame(frame, display: true, animate: false)
         }
     }
     
     func mediaPlayerStateChanged(_ aNotification: Notification!) {
-        if self.player.state == .playing {
+        if self.player.state == .buffering {
             fixVideoSize()
         }
     }
