@@ -6,7 +6,6 @@
 //  Copyright © 2019 castaneai. All rights reserved.
 //
 
-import Cocoa
 import VLCKit
 
 @NSApplicationMain

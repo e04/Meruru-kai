@@ -8,6 +8,7 @@
 
 import Foundation
 import Alamofire
+import Cocoa
 
 public struct Status: Codable {
     let version: String
@@ -40,7 +41,7 @@ public class MirakurunAPI {
     private let baseURL: URL
     private let jsonDecoder: JSONDecoder = JSONDecoder()
     
-    public func fetchPrograms(service: Service, completion: @escaping (Result<[Program]>) -> Void) {
+    public func fetchPrograms(service: Service, completion: @escaping (AFResult<[Program]>) -> Void) {
         let url = self.baseURL.appendingPathComponent("programs")
         let params: Parameters = [
             "serviceId": service.serviceId,
@@ -52,27 +53,20 @@ public class MirakurunAPI {
     }
     
     public func getStreamURL(service: Service) -> URL {
-        return self.baseURL
-            .appendingPathComponent("channels")
-            .appendingPathComponent(service.channel.type)
-            .appendingPathComponent(service.channel.channel)
-            .appendingPathComponent("services")
-            .appendingPathComponent(String(service.serviceId))
-            .appendingPathComponent("stream")
+        return URL(string: "http://192.168.0.202:8888/api/streams/live/\(service.id)/m2ts?mode=0")!
     }
     
-    public func fetchStatus(completion: @escaping (Result<Status>) -> Void) {
+    public func fetchStatus(completion: @escaping (AFResult<Status>) -> Void) {
         let url = self.baseURL.appendingPathComponent("status")
         AF.request(url).responseDecodable { response in
             completion(response.result)
         }
     }
     
-    public func fetchServices(completion: @escaping (Result<[Service]>) -> Void) {
+    public func fetchServices(completion: @escaping (AFResult<[Service]>) -> Void) {
         let url = self.baseURL.appendingPathComponent("services")
         AF.request(url).responseDecodable { response in
             completion(response.result)
         }
     }
-    
 }
