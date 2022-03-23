@@ -16,6 +16,10 @@
         <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="Meruru" customModuleProvider="target">
             <connections>
                 <outlet property="channelsMenu" destination="U4G-Fs-lac" id="gGD-RI-skZ"/>
+                <outlet property="mirakurunURL" destination="HAn-th-awc" id="b2h-lU-xb8"/>
+                <outlet property="preferenceWindow" destination="TYz-nW-XJK" id="eKt-XC-Uhe"/>
+                <outlet property="spinner" destination="gTM-wt-Vyk" id="hKh-cS-4NU"/>
+                <outlet property="videoURL" destination="UGP-3l-fSv" id="M3N-74-gRP"/>
                 <outlet property="videoWrapView" destination="Wgg-tW-AK6" id="MYk-wP-VgN"/>
                 <outlet property="window" destination="QvC-M9-y7g" id="gIp-Ho-8D9"/>
             </connections>
@@ -34,7 +38,11 @@
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="VOq-y0-SEH"/>
-                            <menuItem title="Preferences…" keyEquivalent="," id="BOF-NM-1cW"/>
+                            <menuItem title="Preferences…" keyEquivalent="," id="BOF-NM-1cW">
+                                <connections>
+                                    <action selector="onClickPreference:" target="Voe-Tx-rLC" id="vZk-5S-atO"/>
+                                </connections>
+                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="wFC-TO-SCJ"/>
                             <menuItem title="Services" id="NMo-om-nkz">
                                 <modifierMask key="keyEquivalentModifierMask"/>
@@ -129,7 +137,7 @@
                     <menu key="submenu" title="Channels" id="U4G-Fs-lac"/>
                 </menuItem>
             </items>
-            <point key="canvasLocation" x="-155" y="926"/>
+            <point key="canvasLocation" x="391" y="-731"/>
         </menu>
         <window title="Meruru" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" hasShadow="NO" releasedWhenClosed="NO" animationBehavior="default" titlebarAppearsTransparent="YES" id="QvC-M9-y7g">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" resizable="YES" fullSizeContentView="YES"/>
@@ -148,15 +156,118 @@
                             <constraint firstAttribute="width" secondItem="Wgg-tW-AK6" secondAttribute="height" multiplier="16:9" id="IJs-ir-slg"/>
                         </constraints>
                     </customView>
+                    <progressIndicator misplaced="YES" maxValue="100" displayedWhenStopped="NO" indeterminate="YES" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="gTM-wt-Vyk">
+                        <rect key="frame" x="418" y="203" width="16" height="16"/>
+                    </progressIndicator>
                 </subviews>
                 <constraints>
                     <constraint firstAttribute="bottom" secondItem="Wgg-tW-AK6" secondAttribute="bottom" id="3RS-KW-Tmf"/>
                     <constraint firstAttribute="trailing" secondItem="Wgg-tW-AK6" secondAttribute="trailing" id="7Pu-pU-0DJ"/>
                     <constraint firstItem="Wgg-tW-AK6" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" id="EZN-Uo-0Gp"/>
                     <constraint firstItem="Wgg-tW-AK6" firstAttribute="top" secondItem="EiT-Mj-1SZ" secondAttribute="top" id="Lpi-Qj-O3U"/>
+                    <constraint firstItem="gTM-wt-Vyk" firstAttribute="centerX" secondItem="EiT-Mj-1SZ" secondAttribute="centerX" id="RSw-tb-x65"/>
+                    <constraint firstItem="gTM-wt-Vyk" firstAttribute="centerY" secondItem="EiT-Mj-1SZ" secondAttribute="centerY" id="oyx-9Q-R73"/>
                 </constraints>
             </view>
             <point key="canvasLocation" x="2.5" y="66.5"/>
+        </window>
+        <window title="Config" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="TYz-nW-XJK">
+            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
+            <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+            <rect key="contentRect" x="196" y="206" width="741" height="274"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1055"/>
+            <view key="contentView" id="Nbn-Na-lYB">
+                <rect key="frame" x="0.0" y="0.0" width="741" height="274"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="cms-j6-dGT">
+                        <rect key="frame" x="18" y="238" width="98" height="16"/>
+                        <textFieldCell key="cell" lineBreakMode="clipping" title="Mirakurun URL:" id="0jk-7p-QAs">
+                            <font key="font" usesAppearanceFont="YES"/>
+                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Zdd-6U-WlV">
+                        <rect key="frame" x="18" y="200" width="72" height="16"/>
+                        <textFieldCell key="cell" lineBreakMode="clipping" title="Video URL:" id="FgC-U6-QlI">
+                            <font key="font" usesAppearanceFont="YES"/>
+                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="HAn-th-awc">
+                        <rect key="frame" x="121" y="235" width="600" height="21"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="600" id="lXs-TD-XjN"/>
+                        </constraints>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" placeholderString="http://192.168.xxx.xxx:40772" drawsBackground="YES" id="OjN-c8-Z7m">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="UGP-3l-fSv">
+                        <rect key="frame" x="121" y="195" width="600" height="21"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="600" id="GTf-tf-aYj"/>
+                        </constraints>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" placeholderString="http://192.168.xxx.xxx:40772/channels/&lt;type&gt;/&lt;channel&gt;/services/&lt;serviceid&gt;/stream" drawsBackground="YES" id="HEo-lT-eB4">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="ctT-4T-rBL">
+                        <rect key="frame" x="614" y="13" width="114" height="32"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="100" id="uk5-FY-hgI"/>
+                        </constraints>
+                        <buttonCell key="cell" type="push" title="Save" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="A7t-tG-v5w">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="onClickSavePreference:" target="Voe-Tx-rLC" id="IWP-6S-gz4"/>
+                        </connections>
+                    </button>
+                    <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="MJV-8Z-rSp">
+                        <rect key="frame" x="121" y="87" width="602" height="100"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="100" id="ERi-5w-laf"/>
+                            <constraint firstAttribute="width" constant="598" id="Usw-va-OuC"/>
+                        </constraints>
+                        <textFieldCell key="cell" selectable="YES" id="S4g-40-2SQ">
+                            <font key="font" metaFont="system"/>
+                            <string key="title">Use Mirakurun Stream: 
+http://192.168.xxx.xxx:40772/channels/&lt;type&gt;/&lt;channel&gt;/services/&lt;serviceid&gt;/stream
+Use EPGStation Stream: 
+http://192.168.xxx.xxx:8888/api/streams/live/&lt;serviceid&gt;/m2ts?mode=0
+
+"&lt;value&gt;" will be replaced depend on selected channel data.</string>
+                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="Zdd-6U-WlV" firstAttribute="top" secondItem="cms-j6-dGT" secondAttribute="bottom" constant="22" id="1NF-lo-Gou"/>
+                    <constraint firstItem="cms-j6-dGT" firstAttribute="leading" secondItem="Nbn-Na-lYB" secondAttribute="leading" constant="20" symbolic="YES" id="Nbx-N7-gm1"/>
+                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Zdd-6U-WlV" secondAttribute="trailing" constant="20" symbolic="YES" id="R7h-gB-kTB"/>
+                    <constraint firstAttribute="trailing" secondItem="ctT-4T-rBL" secondAttribute="trailing" constant="20" symbolic="YES" id="S7J-Q2-Gds"/>
+                    <constraint firstAttribute="trailing" secondItem="UGP-3l-fSv" secondAttribute="trailing" constant="20" symbolic="YES" id="TTk-2g-TZT"/>
+                    <constraint firstItem="HAn-th-awc" firstAttribute="top" secondItem="Nbn-Na-lYB" secondAttribute="top" constant="18" id="Tcx-jQ-lvV"/>
+                    <constraint firstAttribute="trailing" secondItem="HAn-th-awc" secondAttribute="trailing" constant="20" symbolic="YES" id="bH7-kC-46r"/>
+                    <constraint firstItem="UGP-3l-fSv" firstAttribute="top" secondItem="HAn-th-awc" secondAttribute="bottom" constant="19" id="dzD-GE-rwg"/>
+                    <constraint firstAttribute="bottom" secondItem="ctT-4T-rBL" secondAttribute="bottom" constant="20" symbolic="YES" id="e0I-1u-6Q6"/>
+                    <constraint firstAttribute="trailing" secondItem="MJV-8Z-rSp" secondAttribute="trailing" constant="20" symbolic="YES" id="i9W-Mz-Qfe"/>
+                    <constraint firstItem="MJV-8Z-rSp" firstAttribute="leading" secondItem="Nbn-Na-lYB" secondAttribute="leading" constant="123" id="lqx-qB-Abu"/>
+                    <constraint firstItem="cms-j6-dGT" firstAttribute="top" secondItem="Nbn-Na-lYB" secondAttribute="top" constant="20" symbolic="YES" id="rGb-qH-uwa"/>
+                    <constraint firstItem="Zdd-6U-WlV" firstAttribute="leading" secondItem="Nbn-Na-lYB" secondAttribute="leading" constant="20" symbolic="YES" id="tST-S7-juv"/>
+                    <constraint firstItem="MJV-8Z-rSp" firstAttribute="top" secondItem="UGP-3l-fSv" secondAttribute="bottom" constant="8" symbolic="YES" id="ukA-zd-KEa"/>
+                </constraints>
+            </view>
+            <point key="canvasLocation" x="81.5" y="-415"/>
         </window>
     </objects>
 </document>

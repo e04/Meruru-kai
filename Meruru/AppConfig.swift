@@ -11,6 +11,7 @@ import Cocoa
 
 struct AppConfigData : Codable {
     var mirakurunPath: String?
+    var videoURL: String?
 }
 
 class AppConfig {

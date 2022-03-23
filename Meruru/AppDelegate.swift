@@ -14,6 +14,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSComboBoxDelegate, VLCMedia
     @IBOutlet weak var window: NSWindow!
     @IBOutlet weak var videoWrapView: NSView!
     @IBOutlet weak var channelsMenu: NSMenu!
+    @IBOutlet weak var preferenceWindow: NSWindow!
+    @IBOutlet weak var mirakurunURL: NSTextField!
+    @IBOutlet weak var videoURL: NSTextField!
+    @IBOutlet weak var spinner: NSProgressIndicator!
     
     var mirakurun: MirakurunAPI!
     var player: VLCMediaPlayer!
@@ -21,23 +25,43 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSComboBoxDelegate, VLCMedia
     var currentService: Service?
     var selectedService: Service?
     var receivedServiceId: Int?
+    var timer = Timer()
+
+    @IBAction func onClickPreference(_ sender: Any) {
+        preferenceWindow.setIsVisible(true)
+        mirakurunURL.stringValue = AppConfig.shared.currentData?.mirakurunPath ?? ""
+        videoURL.stringValue = AppConfig.shared.currentData?.videoURL ?? ""
+    }
+    
+    @IBAction func onClickSavePreference(_ sender: Any) {
+        AppConfig.shared.currentData?.mirakurunPath = mirakurunURL.stringValue
+        AppConfig.shared.currentData?.videoURL = videoURL.stringValue
+        preferenceWindow.setIsVisible(false)
+        self.selectService(selectedService: self.services[0])
+    }
     
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         initUI()
         
         connectToMirakurun()
+        
+        timer = Timer.scheduledTimer(withTimeInterval: 60.0, repeats: true, block: { (timer) in
+            if let service = self.currentService {
+                self.fetchPrograms(selectedService: service)
+            }
+        })
     }
     
     func connectToMirakurun() {
-        guard let mirakurunPath = AppConfig.shared.currentData?.mirakurunPath ?? promptMirakurunPath() else {
-            showErrorAndQuit(error: NSError(domain: "invalid mirakurun path", code: 0))
+        guard let mirakurunPath = AppConfig.shared.currentData?.mirakurunPath else {
+            preferenceWindow.setIsVisible(true)
             return
         }
+        
         mirakurun = MirakurunAPI(baseURL: URL(string: mirakurunPath + "/api")!)
         mirakurun.fetchStatus { result in
             switch result {
             case .success:
-                AppConfig.shared.currentData?.mirakurunPath = mirakurunPath
                 self.mirakurun.fetchServices { result in
                     switch result {
                     case .success(let services):
@@ -103,36 +127,34 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSComboBoxDelegate, VLCMedia
     func initUI() {
         let videoView = VLCVideoView(frame: NSRect(x: 0, y: 0, width: videoWrapView.frame.width, height: videoWrapView.frame.height))
         videoView.autoresizingMask = [.width, .height]
-        videoView.fillScreen = true
-        videoView.backColor = NSColor.red
         videoWrapView.addSubview(videoView)
 
         player = VLCMediaPlayer(videoView: videoView)
         player.delegate = self
-        
-        self.window.level = .floating
+        self.spinner.startAnimation(self)
     }
 
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
         return true
     }
     
-    func promptMirakurunPath() -> Optional<String> {
-        let alert = NSAlert()
-        alert.messageText = "Please input path of Mirakurun (e.g, http://192.168.x.x:40772)"
-        alert.alertStyle = .informational
-        let tf = NSTextField(frame: NSRect(x: 0, y: 0, width: 200, height: 24))
-        alert.accessoryView = tf
-        alert.addButton(withTitle: "OK")
-        let res = alert.runModal()
-        if res == .alertFirstButtonReturn {
-            return tf.stringValue
+    func selectService(selectedService: Service) {
+        self.spinner.startAnimation(self)
+        currentService = selectedService
+        fetchPrograms(selectedService: selectedService)
+        DispatchQueue.main.async {
+            self.player.stop()
+            guard let videoURL = self.mirakurun.getStreamURL(service: selectedService) else {
+                self.preferenceWindow.setIsVisible(true)
+                return
+            }
+            let media = VLCMedia(url: videoURL)
+            self.player.media = media
+            self.player.play()
         }
-        return nil
     }
     
-    func selectService(selectedService: Service) {
-        currentService = selectedService
+    func fetchPrograms(selectedService: Service) {
         mirakurun.fetchPrograms(service: selectedService) { result in
             switch result {
             case .success(let programs):
@@ -145,12 +167,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSComboBoxDelegate, VLCMedia
             case .failure(_):
                 return
             }
-        }
-        DispatchQueue.main.async {
-            self.player.stop()
-            let media = VLCMedia(url: self.mirakurun.getStreamURL(service: selectedService))
-            self.player.media = media
-            self.player.play()
         }
     }
     
@@ -173,14 +189,16 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSComboBoxDelegate, VLCMedia
         let previousFrame = self.window.frame
         let frame = NSRect(x: previousFrame.minX, y: previousFrame.minY, width: previousFrame.width + 0.1, height: previousFrame.height)
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             self.window.setFrame(frame, display: true, animate: false)
         }
     }
     
     func mediaPlayerStateChanged(_ aNotification: Notification!) {
-        if self.player.state == .buffering {
+        print(self.player.state.rawValue)
+        if self.player.state == .esAdded {
             fixVideoSize()
+            self.spinner.stopAnimation(self)
         }
     }
     

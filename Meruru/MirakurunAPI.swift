@@ -52,8 +52,19 @@ public class MirakurunAPI {
         }
     }
     
-    public func getStreamURL(service: Service) -> URL {
-        return URL(string: "http://192.168.0.202:8888/api/streams/live/\(service.id)/m2ts?mode=0")!
+    public func getStreamURL(service: Service) -> URL? {
+        guard  let baseURL = AppConfig.shared.currentData?.videoURL else {
+            return nil
+        }
+
+        let replacedURL = baseURL.replacingOccurrences(of: "<serviceid>", with: String(service.id))
+            .replacingOccurrences(of: "<type>", with: String(service.channel.type))
+            .replacingOccurrences(of: "<channel>", with: String(service.channel.channel))
+
+        guard let urlObject = URL(string: replacedURL) else {
+            return nil
+        }
+        return urlObject
     }
     
     public func fetchStatus(completion: @escaping (AFResult<Status>) -> Void) {
