@@ -11,6 +11,9 @@ https://github.com/castaneai/Meruru
   - EPGStation2.0以降で、設定からURLスキームに`meruru://ADDRESS`と入れれば、ブラウザから開けます。
   
 - 表示がおかしいバグなどを修正
+- よりスタイリッシュなUIに変更
+- streamURLを自由に設定できるように
+    - EPGStationがエンコードしたストリームも指定できます
 
 ## Config
 
